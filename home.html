@@ -48,10 +48,13 @@
         }
 
         .login-screen img {
-            width: 100px;
+            width: 120px; /* Increased width to better suit landscape proportions */
+            height: auto; /* Preserve aspect ratio */
             margin-bottom: 25px;
             filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
             transition: transform 0.3s ease;
+            background-color: #000000; /* Match background to hide white padding */
+            object-fit: contain; /* Ensure logo fits without stretching */
         }
 
         .login-screen img:hover {
@@ -106,8 +109,8 @@
             left: 0;
             width: 100%;
             height: 60px;
-            background: transparent; /* Removed grey background */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -116,10 +119,12 @@
         }
 
         .header-logo {
-            width: 40px;
-            height: 40px;
+            width: 60px; /* Increased width to suit landscape proportions */
+            height: auto; /* Preserve aspect ratio */
             filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
+            background-color: #000000; /* Match background to hide white padding */
+            object-fit: contain; /* Ensure logo fits without stretching */
         }
 
         .header-logo:hover {
@@ -173,14 +178,14 @@
 
         /* Upload Button */
         .upload-btn {
-            width: 40px; /* Reduced size */
+            width: 40px;
             height: 40px;
             background-color: #5a6a7b;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem; /* Reduced font size */
+            font-size: 1.2rem;
             color: #ffffff;
             cursor: pointer;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
@@ -189,7 +194,7 @@
 
         .upload-btn:hover {
             transform: scale(1.1);
-            background-color: #6a7a8b; /* Slightly lighter on hover */
+            background-color: #6a7a8b;
         }
 
         /* Sidebar Styling */
