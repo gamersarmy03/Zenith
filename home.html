@@ -13,9 +13,6 @@
             background-color: #000000;
             font-family: 'Segoe UI', Arial, sans-serif;
             color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             overflow: hidden;
         }
@@ -54,29 +51,97 @@
             line-height: 1.5;
         }
 
-        /* Google Sign-In Button Styling */
         .google-signin {
             display: inline-block;
             margin-top: 30px;
         }
 
-        /* Black Screen Styling */
-        .black-screen {
+        /* Post-Login Screen */
+        .main-screen {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background-color: #000000;
-            justify-content: center;
+            position: relative;
+        }
+
+        .profile-pic {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #5a6a7b;
+            transition: transform 0.2s;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            color: #5a6a7b;
-            font-size: 24px;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar .profile-pic {
+            position: static;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 20px;
+            color: #ffffff;
+            margin: 10px 0;
             text-align: center;
         }
 
-        /* Hide login screen when black screen is active */
+        .sidebar p {
+            font-size: 16px;
+            color: #5a6a7b;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .logout-btn {
+            background-color: #5a6a7b;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: auto;
+            width: 100%;
+            max-width: 200px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Hide login screen when main screen is active */
         .hidden {
             display: none;
         }
@@ -101,27 +166,42 @@
         </div>
     </div>
 
-    <!-- Black Screen Placeholder -->
-    <div class="black-screen" id="blackScreen">
-        <p>Black Screen Placeholder - Ready for Your Updates</p>
+    <!-- Post-Login Main Screen -->
+    <div class="main-screen" id="mainScreen">
+        <img src="" alt="Profile Picture" class="profile-pic" id="profilePic" onclick="toggleSidebar()">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <img src="" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
+            <h3 id="userName">User Name</h3>
+            <p id="userEmail">user@example.com</p>
+            <button class="logout-btn" onclick="signOut()">Logout</button>
+        </div>
     </div>
 
     <script>
+        let userData = null;
+
         // Handle Google Sign-In response
         function handleCredentialResponse(response) {
-            // Decode the JWT token (for demo purposes; in production, verify on server)
-            const userData = parseJwt(response.credential);
+            userData = parseJwt(response.credential);
             console.log('Signed in as:', userData.name, userData.email);
+
+            // Update UI with user data
+            document.getElementById('profilePic').src = userData.picture;
+            document.getElementById('sidebarProfilePic').src = userData.picture;
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userEmail').textContent = userData.email;
 
             // Hide login screen
             document.getElementById('loginScreen').classList.add('hidden');
-            // Show black screen
-            document.getElementById('blackScreen').style.display = 'flex';
+            // Show main screen
+            document.getElementById('mainScreen').style.display = 'block';
             // Store signed-in state
             localStorage.setItem('signedIn', 'true');
+            localStorage.setItem('userData', JSON.stringify(userData));
         }
 
-        // Decode JWT token to extract user info
+        // Decode JWT token
         function parseJwt(token) {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -131,11 +211,39 @@
             return JSON.parse(jsonPayload);
         }
 
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Sign out
+        function signOut() {
+            // Clear stored data
+            localStorage.removeItem('signedIn');
+            localStorage.removeItem('userData');
+            // Hide main screen
+            document.getElementById('mainScreen').style.display = 'none';
+            // Show login screen
+            document.getElementById('loginScreen').classList.remove('hidden');
+            // Reset sidebar
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
         // Check if user is already signed in
         window.onload = function() {
             if (localStorage.getItem('signedIn') === 'true') {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('blackScreen').style.display = 'flex';
+                userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    // Update UI
+                    document.getElementById('profilePic').src = userData.picture;
+                    document.getElementById('sidebarProfilePic').src = userData.picture;
+                    document.getElementById('userName').textContent = userData.name;
+                    document.getElementById('userEmail').textContent = userData.email;
+                    // Show main screen
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('mainScreen').style.display = 'block';
+                }
             }
         };
     </script>
