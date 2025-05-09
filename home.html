@@ -106,6 +106,7 @@
             width: 80px;
             height: 80px;
             margin-bottom: 20px;
+            display: block; /* Ensure visibility */
         }
 
         .sidebar h3 {
@@ -194,7 +195,7 @@
         <img src="" alt="Profile Picture" class="profile-pic" id="profilePic" onclick="toggleSidebar()">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
-            <img src="" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
+            <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
             <h3 id="userName">User Name</h3>
             <p id="userEmail">user@example.com</p>
             <button class="logout-btn" onclick="signOut()" aria-label="Logout">Logout</button>
@@ -208,12 +209,17 @@
         function handleCredentialResponse(response) {
             userData = parseJwt(response.credential);
             console.log('Signed in as:', userData.name, userData.email);
+            console.log('Profile Picture URL:', userData.picture); // Debug
 
             // Update UI with user data
-            document.getElementById('profilePic').src = userData.picture;
-            document.getElementById('sidebarProfilePic').src = userData.picture;
-            document.getElementById('userName').textContent = userData.name;
-            document.getElementById('userEmail').textContent = userData.email;
+            const profilePic = document.getElementById('profilePic');
+            const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+            const defaultImage = 'https://via.placeholder.com/80'; // Fallback image
+
+            profilePic.src = userData.picture || defaultImage;
+            sidebarProfilePic.src = userData.picture || defaultImage;
+            document.getElementById('userName').textContent = userData.name || 'Unknown User';
+            document.getElementById('userEmail').textContent = userData.email || 'No email provided';
 
             // Hide login screen
             document.getElementById('loginScreen').classList.add('hidden');
@@ -253,6 +259,8 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             // Reset sidebar
             document.getElementById('sidebar').classList.remove('open');
+            // Reset profile picture to default
+            document.getElementById('sidebarProfilePic').src = 'https://via.placeholder.com/80';
         }
 
         // Check if user is already signed in
@@ -260,14 +268,23 @@
             if (localStorage.getItem('signedIn') === 'true') {
                 userData = JSON.parse(localStorage.getItem('userData'));
                 if (userData) {
-                    // Update UI
-                    document.getElementById('profilePic').src = userData.picture;
-                    document.getElementById('sidebarProfilePic').src = userData.picture;
-                    document.getElementById('userName').textContent = userData.name;
-                    document.getElementById('userEmail').textContent = userData.email;
+                    console.log('Loaded userData from localStorage:', userData); // Debug
+                    console.log('Profile Picture URL from localStorage:', userData.picture); // Debug
+
+                    const profilePic = document.getElementById('profilePic');
+                    const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+                    const defaultImage = 'https://via.placeholder.com/80'; // Fallback image
+
+                    profilePic.src = userData.picture || defaultImage;
+                    sidebarProfilePic.src = userData.picture || defaultImage;
+                    document.getElementById('userName').textContent = userData.name || 'Unknown User';
+                    document.getElementById('userEmail').textContent = userData.email || 'No email provided';
+
                     // Show main screen
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('mainScreen').style.display = 'block';
+                } else {
+                    console.error('Failed to load userData from localStorage'); // Debug
                 }
             }
         };
