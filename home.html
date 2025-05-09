@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             background-color: #000000;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             color: #ffffff;
             display: flex;
             justify-content: center;
@@ -18,49 +18,57 @@
             overflow: hidden;
         }
 
-        /* Login Popup Styling */
-        .login-popup {
-            background-color: #1a1a1a;
-            padding: 40px;
-            border-radius: 10px;
+        /* Full-Screen Login Styling */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 90%;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        .login-popup img {
-            width: 100px;
-            margin-bottom: 20px;
+        .login-screen img {
+            width: 120px;
+            margin-bottom: 30px;
         }
 
-        .login-popup h2 {
-            font-size: 24px;
-            margin: 0 0 10px;
+        .login-screen h2 {
+            font-size: 32px;
+            margin: 0 0 20px;
             color: #ffffff;
+            font-weight: 600;
         }
 
-        .login-popup p {
-            font-size: 16px;
+        .login-screen p {
+            font-size: 18px;
             color: #5a6a7b;
-            margin: 5px 0;
+            margin: 8px 0;
+            max-width: 600px;
+            line-height: 1.5;
         }
 
         .google-signin {
             display: inline-block;
             background-color: #ffffff;
             color: #000000;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 30px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 16px;
-            margin-top: 20px;
-            transition: background-color 0.3s;
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 30px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         .google-signin:hover {
             background-color: #5a6a7b;
             color: #ffffff;
+            transform: scale(1.05);
         }
 
         /* Black Screen Styling */
@@ -79,21 +87,21 @@
             text-align: center;
         }
 
-        /* Hide login popup when black screen is active */
+        /* Hide login screen when black screen is active */
         .hidden {
             display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Login Popup -->
-    <div class="login-popup" id="loginPopup">
+    <!-- Full-Screen Login -->
+    <div class="login-screen" id="loginScreen">
         <img src="logo.png" alt="Zenith Cloud Logo">
         <h2>Zenith Cloud</h2>
-        <p>Secure</p>
-        <p>Cloud</p>
-        <p>Storage</p>
-        <p>Privacy Your Data</p>
+        <p>Bank-grade security to protect your data</p>
+        <p>Scalable cloud infrastructure for seamless access</p>
+        <p>Unlimited storage for all your needs</p>
+        <p>Your privacy is our priority</p>
         <a href="https://zenithcloud.netlify.app" class="google-signin" onclick="showBlackScreen()">Sign in with Google</a>
     </div>
 
@@ -103,11 +111,21 @@
     </div>
 
     <script>
+        // Check if user has already signed in (using localStorage)
+        if (localStorage.getItem('signedIn') === 'true') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('blackScreen').style.display = 'flex';
+        }
+
         function showBlackScreen() {
-            // Hide login popup
-            document.getElementById('loginPopup').classList.add('hidden');
+            // Prevent default navigation for demo (remove this in production)
+            event.preventDefault();
+            // Hide login screen
+            document.getElementById('loginScreen').classList.add('hidden');
             // Show black screen
             document.getElementById('blackScreen').style.display = 'flex';
+            // Store signed-in state
+            localStorage.setItem('signedIn', 'true');
         }
     </script>
 </body>
