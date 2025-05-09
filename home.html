@@ -10,44 +10,75 @@
             color: #ffffff;
             font-family: sans-serif;
             margin: 0;
-            padding: 20px; /* Add some padding around the content */
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            padding: 20px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center items horizontally */
-            justify-content: center; /* Center items vertically */
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
+            overflow: hidden; /* Prevent scrollbars from the animation */
         }
 
         .logo-container {
             position: absolute;
             top: 20px;
             left: 20px;
+            z-index: 10; /* Ensure logo is on top of the animation */
         }
 
         .branding-text {
-            font-size: 2.5em; /* Slightly larger heading */
+            font-size: 2.5em;
             font-weight: bold;
             margin-bottom: 20px;
             opacity: 0;
-            animation: fadeIn 1s ease-in-out forwards 0.5s; /* Fade-in animation */
+            animation: fadeIn 1s ease-in-out forwards 0.5s;
+            z-index: 10; /* Ensure text is on top */
         }
 
         .note {
             color: #5a6a7b;
-            font-size: 1.1em; /* Slightly larger note */
+            font-size: 1.1em;
             text-align: center;
             opacity: 0;
-            animation: fadeIn 1s ease-in-out forwards 1s; /* Fade-in animation with a delay */
+            animation: fadeIn 1s ease-in-out forwards 1s;
+            z-index: 10; /* Ensure note is on top */
         }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%; /* Make it wider than the viewport */
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.5) 80%);
+            animation: moveClouds 20s linear infinite alternate;
+        }
+
+        .background-animation::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: -50%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.6) 70%);
+            animation: moveClouds 30s linear infinite alternate-reverse;
+        }
+
+        @keyframes moveClouds {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
     </style>
 </head>
 <body>
+    <div class="background-animation"></div>
     <div class="logo-container">
         <img src="logo.png" alt="Zenith Cloud Logo" style="height: 50px;">
     </div>
