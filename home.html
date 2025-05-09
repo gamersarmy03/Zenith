@@ -26,20 +26,20 @@
             align-items: center;
         }
 
-        /* Modernized Full-Screen Login Styling */
+        /* Full-Screen Login Styling */
         .login-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 400px; /* Card-like width */
-            background-color: rgba(255, 255, 255, 0.05); /* Slight transparency for card effect */
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             padding: 40px 30px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
             animation: fadeIn 1s ease-in-out;
-            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            backdrop-filter: blur(10px);
         }
 
         @keyframes fadeIn {
@@ -69,7 +69,7 @@
         .login-screen p {
             font-size: 1rem;
             font-weight: 300;
-            color: #5a6a7b; /* Secondary color */
+            color: #5a6a7b;
             margin: 10px 0;
             line-height: 1.6;
             text-align: center;
@@ -90,7 +90,7 @@
             transform: scale(1.05);
         }
 
-        /* Post-Login Main Screen (Unchanged) */
+        /* Post-Login Main Screen */
         .main-screen {
             display: none;
             width: 100%;
@@ -99,29 +99,95 @@
             position: relative;
         }
 
+        /* Header for Mobile */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
+
+        .search-bar {
+            flex: 1;
+            margin: 0 15px;
+            background-color: #2a2a2a;
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 300;
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: #5a6a7b;
+        }
+
         .profile-pic {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            border: 3px solid #5a6a7b;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid #5a6a7b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
         }
 
         .profile-pic:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Sidebar Styling (Unchanged) */
+        /* Upload Button */
+        .upload-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #5a6a7b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            z-index: 500;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sidebar Styling */
         .sidebar {
             position: fixed;
             top: 0;
-            left: -250px;
+            right: -250px; /* Changed to right for mobile */
             width: 250px;
             height: 100%;
             background-color: #1a1a1a;
@@ -129,13 +195,13 @@
             flex-direction: column;
             align-items: center;
             padding: 30px 20px;
-            transition: left 0.3s ease;
+            transition: right 0.3s ease; /* Changed to right transition */
             z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3); /* Shadow adjusted */
         }
 
         .sidebar.open {
-            left: 0;
+            right: 0; /* Slide in from right */
         }
 
         .sidebar .profile-pic {
@@ -185,15 +251,24 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Desktop view (Unchanged) */
+        /* Desktop view (Unchanged for now) */
         @media (min-width: 768px) {
             .sidebar {
                 left: 0;
+                right: auto; /* Reset for desktop */
                 transition: none;
             }
 
             .sidebar.open {
                 left: 0;
+            }
+
+            .header {
+                display: none; /* Hide header on desktop for now */
+            }
+
+            .upload-btn {
+                display: none; /* Hide upload button on desktop for now */
             }
 
             .profile-pic {
@@ -233,7 +308,15 @@
 
     <!-- Post-Login Main Screen -->
     <div class="main-screen" id="mainScreen">
-        <img src="" alt="Profile Picture" class="profile-pic" id="profilePic" onclick="toggleSidebar()">
+        <div class="header">
+            <img src="logo.png" alt="Zenith Cloud Logo" class="header-logo">
+            <div class="search-bar">
+                <input type="text" placeholder="Search files...">
+            </div>
+            <img src="" alt="Profile Picture" class="profile-pic" id="profilePic" onclick="toggleSidebar()">
+        </div>
+        <!-- Upload Button -->
+        <div class="upload-btn" onclick="uploadFile()">+</div>
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
@@ -290,6 +373,12 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarProfilePic').src = 'https://via.placeholder.com/80';
+        }
+
+        // Placeholder function for file upload
+        function uploadFile() {
+            console.log('Upload file button clicked');
+            // Add file upload logic here (e.g., trigger file input)
         }
 
         window.onload = function() {
