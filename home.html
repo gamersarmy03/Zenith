@@ -123,25 +123,46 @@
         }
 
         .logout-btn {
-    background-color: #5a6a7b;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: auto; /* Keeps it at the bottom */
-    margin-bottom: 20px; /* Add some space at the bottom */
-    width: 100%;
-    max-width: 200px;
-    transition: background-color 0.3s, transform 0.2s; /* Add transform for a subtle effect */
-}
+            background-color: #5a6a7b;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: auto;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 200px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
 
-.logout-btn:hover {
-    background-color: #6a7a8b; /* Slightly lighter shade for hover */
-    color: #ffffff; /* Keep text white for better contrast */
-    transform: scale(1.05); /* Subtle scale effect on hover */
-}
+        .logout-btn:hover {
+            background-color: #6a7a8b;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* Desktop view */
+        @media (min-width: 768px) {
+            .sidebar {
+                left: 0;
+                transition: none;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .profile-pic {
+                display: none;
+            }
+
+            .main-screen {
+                margin-left: 250px;
+                width: calc(100% - 250px);
+            }
+        }
 
         /* Hide login screen when main screen is active */
         .hidden {
@@ -176,7 +197,7 @@
             <img src="" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
             <h3 id="userName">User Name</h3>
             <p id="userEmail">user@example.com</p>
-            <button class="logout-btn" onclick="signOut()">Logout</button>
+            <button class="logout-btn" onclick="signOut()" aria-label="Logout">Logout</button>
         </div>
     </div>
 
@@ -213,10 +234,12 @@
             return JSON.parse(jsonPayload);
         }
 
-        // Toggle sidebar
+        // Toggle sidebar (only for mobile)
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('open');
+            }
         }
 
         // Sign out
