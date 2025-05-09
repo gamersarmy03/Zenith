@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith Cloud</title>
+    <!-- Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             margin: 0;
@@ -52,23 +54,10 @@
             line-height: 1.5;
         }
 
+        /* Google Sign-In Button Styling */
         .google-signin {
             display: inline-block;
-            background-color: #ffffff;
-            color: #000000;
-            padding: 12px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 500;
             margin-top: 30px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .google-signin:hover {
-            background-color: #5a6a7b;
-            color: #ffffff;
-            transform: scale(1.05);
         }
 
         /* Black Screen Styling */
@@ -102,7 +91,14 @@
         <p>Scalable cloud infrastructure for seamless access</p>
         <p>Unlimited storage for all your needs</p>
         <p>Your privacy is our priority</p>
-        <a href="https://zenithcloud.netlify.app" class="google-signin" onclick="showBlackScreen()">Sign in with Google</a>
+        <div class="google-signin">
+            <div id="g_id_onload"
+                 data-client_id="305620063385-9th5kvdgld2c33v82ikindd3nv41o1i2.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular"></div>
+        </div>
     </div>
 
     <!-- Black Screen Placeholder -->
@@ -111,15 +107,12 @@
     </div>
 
     <script>
-        // Check if user has already signed in (using localStorage)
-        if (localStorage.getItem('signedIn') === 'true') {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('blackScreen').style.display = 'flex';
-        }
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            // Decode the JWT token (for demo purposes; in production, verify on server)
+            const userData = parseJwt(response.credential);
+            console.log('Signed in as:', userData.name, userData.email);
 
-        function showBlackScreen() {
-            // Prevent default navigation for demo (remove this in production)
-            event.preventDefault();
             // Hide login screen
             document.getElementById('loginScreen').classList.add('hidden');
             // Show black screen
@@ -127,6 +120,24 @@
             // Store signed-in state
             localStorage.setItem('signedIn', 'true');
         }
+
+        // Decode JWT token to extract user info
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        // Check if user is already signed in
+        window.onload = function() {
+            if (localStorage.getItem('signedIn') === 'true') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('blackScreen').style.display = 'flex';
+            }
+        };
     </script>
 </body>
 </html>
