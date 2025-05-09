@@ -123,23 +123,25 @@
         }
 
         .logout-btn {
-            background-color: #5a6a7b;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: auto;
-            width: 100%;
-            max-width: 200px;
-            transition: background-color 0.3s;
-        }
+    background-color: #5a6a7b;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: auto; /* Keeps it at the bottom */
+    margin-bottom: 20px; /* Add some space at the bottom */
+    width: 100%;
+    max-width: 200px;
+    transition: background-color 0.3s, transform 0.2s; /* Add transform for a subtle effect */
+}
 
-        .logout-btn:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
+.logout-btn:hover {
+    background-color: #6a7a8b; /* Slightly lighter shade for hover */
+    color: #ffffff; /* Keep text white for better contrast */
+    transform: scale(1.05); /* Subtle scale effect on hover */
+}
 
         /* Hide login screen when main screen is active */
         .hidden {
