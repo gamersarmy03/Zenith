@@ -6,15 +6,24 @@
     <title>Zenith Cloud</title>
     <!-- Google Sign-In Script -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background-color: #000000;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #e0e7ff;
             height: 100vh;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Full-Screen Login Styling */
@@ -25,44 +34,61 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            background-color: #000000;
             text-align: center;
             padding: 20px;
-            box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-screen img {
-            width: 120px;
-            margin-bottom: 30px;
+            width: 100px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
         }
 
         .login-screen h2 {
-            font-size: 32px;
-            margin: 0 0 20px;
-            color: #ffffff;
+            font-size: 2.5rem;
             font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .login-screen p {
-            font-size: 18px;
-            color: #5a6a7b;
+            font-size: 1rem;
+            font-weight: 300;
+            color: #a5b4fc;
             margin: 8px 0;
-            max-width: 600px;
-            line-height: 1.5;
+            max-width: 500px;
+            line-height: 1.6;
         }
 
         .google-signin {
-            display: inline-block;
             margin-top: 30px;
         }
 
-        /* Post-Login Screen */
+        .g_id_signin {
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .g_id_signin:hover {
+            transform: scale(1.05);
+        }
+
+        /* Post-Login Main Screen */
         .main-screen {
             display: none;
             width: 100%;
             height: 100%;
-            background-color: #000000;
             position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .profile-pic {
@@ -73,12 +99,14 @@
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            border: 2px solid #5a6a7b;
-            transition: transform 0.2s;
+            border: 3px solid #6366f1;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .profile-pic:hover {
             transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
 
         /* Sidebar Styling */
@@ -88,13 +116,14 @@
             left: -250px;
             width: 250px;
             height: 100%;
-            background-color: #1a1a1a;
+            background: #2a2a4a;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 30px 20px;
             transition: left 0.3s ease;
             z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar.open {
@@ -103,45 +132,49 @@
 
         .sidebar .profile-pic {
             position: static;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             margin-bottom: 20px;
-            display: block; /* Ensure visibility */
+            border: 4px solid #6366f1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: block;
         }
 
         .sidebar h3 {
-            font-size: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
             color: #ffffff;
             margin: 10px 0;
             text-align: center;
         }
 
         .sidebar p {
-            font-size: 16px;
-            color: #5a6a7b;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #a5b4fc;
             margin: 5px 0;
             text-align: center;
         }
 
         .logout-btn {
-            background-color: #5a6a7b;
+            background: linear-gradient(90deg, #6366f1, #a5b4fc);
             color: #ffffff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
             margin-top: auto;
             margin-bottom: 20px;
             width: 100%;
             max-width: 200px;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .logout-btn:hover {
-            background-color: #6a7a8b;
-            color: #ffffff;
             transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         /* Desktop view */
@@ -209,28 +242,23 @@
         function handleCredentialResponse(response) {
             userData = parseJwt(response.credential);
             console.log('Signed in as:', userData.name, userData.email);
-            console.log('Profile Picture URL:', userData.picture); // Debug
+            console.log('Profile Picture URL:', userData.picture);
 
-            // Update UI with user data
             const profilePic = document.getElementById('profilePic');
             const sidebarProfilePic = document.getElementById('sidebarProfilePic');
-            const defaultImage = 'https://via.placeholder.com/80'; // Fallback image
+            const defaultImage = 'https://via.placeholder.com/80';
 
             profilePic.src = userData.picture || defaultImage;
             sidebarProfilePic.src = userData.picture || defaultImage;
             document.getElementById('userName').textContent = userData.name || 'Unknown User';
             document.getElementById('userEmail').textContent = userData.email || 'No email provided';
 
-            // Hide login screen
             document.getElementById('loginScreen').classList.add('hidden');
-            // Show main screen
             document.getElementById('mainScreen').style.display = 'block';
-            // Store signed-in state
             localStorage.setItem('signedIn', 'true');
             localStorage.setItem('userData', JSON.stringify(userData));
         }
 
-        // Decode JWT token
         function parseJwt(token) {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -240,7 +268,6 @@
             return JSON.parse(jsonPayload);
         }
 
-        // Toggle sidebar (only for mobile)
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (window.innerWidth < 768) {
@@ -248,43 +275,35 @@
             }
         }
 
-        // Sign out
         function signOut() {
-            // Clear stored data
             localStorage.removeItem('signedIn');
             localStorage.removeItem('userData');
-            // Hide main screen
             document.getElementById('mainScreen').style.display = 'none';
-            // Show login screen
             document.getElementById('loginScreen').classList.remove('hidden');
-            // Reset sidebar
             document.getElementById('sidebar').classList.remove('open');
-            // Reset profile picture to default
             document.getElementById('sidebarProfilePic').src = 'https://via.placeholder.com/80';
         }
 
-        // Check if user is already signed in
         window.onload = function() {
             if (localStorage.getItem('signedIn') === 'true') {
                 userData = JSON.parse(localStorage.getItem('userData'));
                 if (userData) {
-                    console.log('Loaded userData from localStorage:', userData); // Debug
-                    console.log('Profile Picture URL from localStorage:', userData.picture); // Debug
+                    console.log('Loaded userData from localStorage:', userData);
+                    console.log('Profile Picture URL from localStorage:', userData.picture);
 
                     const profilePic = document.getElementById('profilePic');
                     const sidebarProfilePic = document.getElementById('sidebarProfilePic');
-                    const defaultImage = 'https://via.placeholder.com/80'; // Fallback image
+                    const defaultImage = 'https://via.placeholder.com/80';
 
                     profilePic.src = userData.picture || defaultImage;
                     sidebarProfilePic.src = userData.picture || defaultImage;
                     document.getElementById('userName').textContent = userData.name || 'Unknown User';
                     document.getElementById('userEmail').textContent = userData.email || 'No email provided';
 
-                    // Show main screen
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('mainScreen').style.display = 'block';
                 } else {
-                    console.error('Failed to load userData from localStorage'); // Debug
+                    console.error('Failed to load userData from localStorage');
                 }
             }
         };
