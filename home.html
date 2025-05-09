@@ -99,7 +99,7 @@
             position: relative;
         }
 
-        /* Header for Mobile */
+        /* Header for Mobile and Desktop */
         .header {
             position: fixed;
             top: 0;
@@ -161,9 +161,6 @@
 
         /* Upload Button */
         .upload-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
             width: 50px;
             height: 50px;
             background-color: #5a6a7b;
@@ -176,7 +173,6 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
-            z-index: 500;
         }
 
         .upload-btn:hover {
@@ -187,7 +183,7 @@
         .sidebar {
             position: fixed;
             top: 0;
-            right: -250px; /* Changed to right for mobile */
+            right: -250px;
             width: 250px;
             height: 100%;
             background-color: #1a1a1a;
@@ -195,13 +191,13 @@
             flex-direction: column;
             align-items: center;
             padding: 30px 20px;
-            transition: right 0.3s ease; /* Changed to right transition */
+            transition: right 0.3s ease;
             z-index: 1000;
-            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3); /* Shadow adjusted */
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar.open {
-            right: 0; /* Slide in from right */
+            right: 0;
         }
 
         .sidebar .profile-pic {
@@ -251,11 +247,25 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Desktop view (Unchanged for now) */
+        /* Mobile view */
+        @media (max-width: 767px) {
+            .header {
+                display: flex; /* Already set, just ensuring */
+            }
+
+            .upload-btn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 500;
+            }
+        }
+
+        /* Desktop view */
         @media (min-width: 768px) {
             .sidebar {
                 left: 0;
-                right: auto; /* Reset for desktop */
+                right: auto;
                 transition: none;
             }
 
@@ -264,20 +274,30 @@
             }
 
             .header {
-                display: none; /* Hide header on desktop for now */
+                left: 250px; /* Account for sidebar width */
+                width: calc(100% - 250px); /* Adjust width */
+                padding: 0 20px;
+                justify-content: space-between;
             }
 
-            .upload-btn {
-                display: none; /* Hide upload button on desktop for now */
+            .search-bar {
+                max-width: 400px; /* Limit search bar width on desktop */
+                margin: 0 20px;
             }
 
             .profile-pic {
-                display: none;
+                display: none; /* Hide profile pic on desktop */
+            }
+
+            .upload-btn {
+                position: static; /* Inside header */
+                margin-left: 20px;
             }
 
             .main-screen {
                 margin-left: 250px;
                 width: calc(100% - 250px);
+                padding-top: 60px; /* Account for header height */
             }
         }
 
@@ -313,10 +333,8 @@
             <div class="search-bar">
                 <input type="text" placeholder="Search files...">
             </div>
-            <img src="" alt="Profile Picture" class="profile-pic" id="profilePic" onclick="toggleSidebar()">
+            <div class="upload-btn" onclick="uploadFile()">+</div>
         </div>
-        <!-- Upload Button -->
-        <div class="upload-btn" onclick="uploadFile()">+</div>
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
@@ -335,12 +353,10 @@
             console.log('Signed in as:', userData.name, userData.email);
             console.log('Profile Picture URL:', userData.picture);
 
-            const profilePic = document.getElementById('profilePic');
-            const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+            const profilePic = document.getElementById('sidebarProfilePic');
             const defaultImage = 'https://via.placeholder.com/80';
 
             profilePic.src = userData.picture || defaultImage;
-            sidebarProfilePic.src = userData.picture || defaultImage;
             document.getElementById('userName').textContent = userData.name || 'Unknown User';
             document.getElementById('userEmail').textContent = userData.email || 'No email provided';
 
@@ -388,12 +404,10 @@
                     console.log('Loaded userData from localStorage:', userData);
                     console.log('Profile Picture URL from localStorage:', userData.picture);
 
-                    const profilePic = document.getElementById('profilePic');
-                    const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+                    const profilePic = document.getElementById('sidebarProfilePic');
                     const defaultImage = 'https://via.placeholder.com/80';
 
                     profilePic.src = userData.picture || defaultImage;
-                    sidebarProfilePic.src = userData.picture || defaultImage;
                     document.getElementById('userName').textContent = userData.name || 'Unknown User';
                     document.getElementById('userEmail').textContent = userData.email || 'No email provided';
 
