@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith Cloud</title>
+    <!-- Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Full-Screen Login Styling */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-screen img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+            transition: transform 0.3s ease;
+            background-color: #000000;
+            object-fit: contain;
+        }
+
+        .login-screen img:hover {
+            transform: scale(1.1);
+        }
+
+        .login-screen h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-screen p {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #5a6a7b;
+            margin: 10px 0;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .google-signin {
+            margin-top: 30px;
+        }
+
+        .g_id_signin {
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .g_id_signin:hover {
+            transform: scale(1.05);
+        }
+
+        /* Post-Login Main Screen */
+        .main-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            position: relative;
+        }
+
+        /* Header for Mobile and Desktop */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .header-logo {
+            width: 60px;
+            height: auto;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+            background-color: #000000;
+            object-fit: contain;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            flex: 1;
+            margin: 0 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar:hover,
+        .search-bar:focus-within {
+            border-color: #5a6a7b;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 300;
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: #5a6a7b;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #5a6a7b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        /* Upload Button */
+        .upload-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #5a6a7b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.1);
+            background-color: #6a7a8b;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .sidebar .profile-pic {
+            position: static;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            border: 4px solid #5a6a7b;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: block;
+        }
+
+        .sidebar h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .sidebar p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #5a6a7b;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .logout-btn {
+            background-color: #5a6a7b;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: auto;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile view */
+        @media (max-width: 767px) {
+            .header {
+                display: flex;
+            }
+
+            .upload-btn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 500;
+            }
+
+            .profile-pic.header-profile-pic {
+                display: block; /* Show in mobile */
+            }
+        }
+
+        /* Desktop view */
+        @media (min-width: 768px) {
+            .sidebar {
+                left: 0;
+                right: auto;
+                transition: none;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .header {
+                left: 250px;
+                width: calc(100% - 250px);
+                padding: 0 20px;
+                justify-content: space-between;
+            }
+
+            .search-bar {
+                max-width: 400px;
+                margin: 0 20px;
+            }
+
+            .profile-pic.header-profile-pic {
+                display: none; /* Hide in desktop */
+            }
+
+            .upload-btn {
+                position: static;
+                margin-left: 20px;
+            }
+
+            .main-screen {
+                margin-left: 250px;
+                width: calc(100% - 250px);
+                padding-top: 60px;
+            }
+        }
+
+        /* Hide login screen when main screen is active */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Full-Screen Login -->
+    <div class="login-screen" id="loginScreen">
+        <img src="logo.png" alt="Zenith Cloud Logo">
+        <h2>Zenith Cloud</h2>
+        <p>Bank-grade security to protect your data</p>
+        <p>Scalable cloud infrastructure for seamless access</p>
+        <p>Unlimited storage for all your needs</p>
+        <p>Your privacy is our priority</p>
+        <div class="google-signin">
+            <div id="g_id_onload"
+                 data-client_id="305620063385-9th5kvdgld2c33v82ikindd3nv41o1i2.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular"></div>
+        </div>
+    </div>
+
+    <!-- Post-Login Main Screen -->
+    <div class="main-screen" id="mainScreen">
+        <div class="header">
+            <img src="logo.png" alt="Zenith Cloud Logo" class="header-logo">
+            <div class="search-bar">
+                <input type="text" placeholder="Search files...">
+            </div>
+            <img src="" alt="Profile Picture" class="profile-pic header-profile-pic" id="headerProfilePic" onclick="toggleSidebar()">
+            <div class="upload-btn" onclick="uploadFile()">+</div>
+        </div>
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <img src="https://via.placeholder.com/80" alt="Profile Picture" class="profile-pic" id="sidebarProfilePic">
+            <h3 id="userName">User Name</h3>
+            <p id="userEmail">user@example.com</p>
+            <button class="logout-btn" onclick="signOut()" aria-label="Logout">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        let userData = null;
+
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            userData = parseJwt(response.credential);
+            console.log('Signed in as:', userData.name, userData.email);
+            console.log('Profile Picture URL:', userData.picture);
+
+            const headerProfilePic = document.getElementById('headerProfilePic'); // For mobile header
+            const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+            const defaultImage = 'https://via.placeholder.com/80';
+
+            headerProfilePic.src = userData.picture || defaultImage;
+            sidebarProfilePic.src = userData.picture || defaultImage;
+            document.getElementById('userName').textContent = userData.name || 'Unknown User';
+            document.getElementById('userEmail').textContent = userData.email || 'No email provided';
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainScreen').style.display = 'block';
+            localStorage.setItem('signedIn', 'true');
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('open');
+            }
+        }
+
+        function signOut() {
+            localStorage.removeItem('signedIn');
+            localStorage.removeItem('userData');
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarProfilePic').src = 'https://via.placeholder.com/80';
+            document.getElementById('headerProfilePic').src = 'https://via.placeholder.com/80';
+        }
+
+        // Placeholder function for file upload
+        function uploadFile() {
+            console.log('Upload file button clicked');
+            // Add file upload logic here (e.g., trigger file input)
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('signedIn') === 'true') {
+                userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    console.log('Loaded userData from localStorage:', userData);
+                    console.log('Profile Picture URL from localStorage:', userData.picture);
+
+                    const headerProfilePic = document.getElementById('headerProfilePic');
+                    const sidebarProfilePic = document.getElementById('sidebarProfilePic');
+                    const defaultImage = 'https://via.placeholder.com/80';
+
+                    headerProfilePic.src = userData.picture || defaultImage;
+                    sidebarProfilePic.src = userData.picture || defaultImage;
+                    document.getElementById('userName').textContent = userData.name || 'Unknown User';
+                    document.getElementById('userEmail').textContent = userData.email || 'No email provided';
+
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('mainScreen').style.display = 'block';
+                } else {
+                    console.error('Failed to load userData from localStorage');
+                }
+            }
+        };
+    </script>
+</body>
+</html>
